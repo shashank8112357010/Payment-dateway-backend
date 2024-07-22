@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8000;
 const MONGODB_URL = process.env.MONGODB_URL;
 
 const paymentRoute = require("./routes/paymentRoutes");
+const userRoute = require("./routes/userRoutes");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use("/dashpayz", paymentRoute);
+app.use("/dashpayz/user", userRoute);
 
 const server = app.listen(
     PORT,

@@ -1,13 +1,10 @@
 const express = require("express");
 const { createPayment, getPaymentDetails, renderCheckoutPage } = require("../controllers/paymentControllers");
+const { register } = require("../controllers/userController");
 const router = express.Router();
 
-// Make Payment: 
-router.post("/payment", createPayment);
+// User Registration: 
+router.post("/register", register);
 
-// Get All Transactions of a User: 
-router.get("/getMyTransactions", getPaymentDetails);
-
-router.get("/checkout", renderCheckoutPage);
 
 module.exports = router;

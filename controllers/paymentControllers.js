@@ -3,82 +3,12 @@ const Payment = require("../models/paymentModel");
 // method to create payment: 
 module.exports.createPayment = async (req, res) => {
     try {
-        const { amount, currency, firstName, lastName, country, phoneNo, email, cardNumber, validThru, cvv, nameOnCard } = req.body;
+        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.body;
 
-        if (!amount) {
+        if (!amount || !currency || !firstName || !lastName || !country || !phoneNo || !email || !address || cardNumber || !validThru || !cvv || !nameOnCard) {
             return res.status(400).json({
                 success: false,
-                message: "Provide amount",
-            })
-        }
-
-        // if(!currency){
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "Provide currency",
-        //     })
-        // }
-
-        if (!firstName) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide First Name",
-            })
-        }
-
-        if (!lastName) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide Last Name",
-            })
-        }
-
-        if (!country) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide country",
-            })
-        }
-
-        if (!phoneNo) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide Phone number",
-            })
-        }
-
-        if (!email) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide Email",
-            })
-        }
-
-        if (!cardNumber) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide Card Number",
-            })
-        }
-
-        if (!validThru) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide valid through",
-            })
-        }
-
-        if (!cvv) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide CVV",
-            })
-        }
-
-        if (!nameOnCard) {
-            return res.status(400).json({
-                success: false,
-                message: "Provide Name On Card",
+                message: "Provide all required fields!!"
             })
         }
 
@@ -90,6 +20,7 @@ module.exports.createPayment = async (req, res) => {
             country,
             phoneNo,
             email,
+            address,
             cardNumber,
             validThru,
             cvv,
@@ -109,7 +40,7 @@ module.exports.createPayment = async (req, res) => {
     }
 }
 
-
+// Getting all transactions of user: 
 module.exports.getPaymentDetails = async (req, res) => {
     try {
         // const {userId} = req.params.id;
@@ -140,6 +71,7 @@ module.exports.getPaymentDetails = async (req, res) => {
     }
 }
 
+// Rendering checkout page: 
 module.exports.renderCheckoutPage = (req, res) => {
     res.render('payment');
 }
