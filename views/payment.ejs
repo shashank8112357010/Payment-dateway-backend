@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>DashPayz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 65%;
+            min-height: 500px;
+            display: flex;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .left {
+            width: 40%;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .left h1 {
+            align-self: flex-start;
+            margin: 0;
+            font-size: 2em;
+            font-weight: 900;
+            /* font-style: oblique; */
+            color: #003366;
+        }
+
+        .left h2 {
+            margin-top: 120px;
+            align-self: flex-start;
+            font-size: 1.2em;
+            color: #4C4C4C;
+        }
+
+        .left .payment-methods {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .left .payment-method {
+            display: flex;
+            align-items: center;
+            background-color: #003366;
+            color: #fff;
+            padding: 10px;
+            gap: 1em;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            height: 40px;
+            transition: background-color 0.3s;
+        }
+
+        .left .payment-method:hover {
+            background-color: #004080;
+        }
+
+        .left .payment-method img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .left .payment-method span {
+            font-size: 1em;
+            flex-grow: 1;
+        }
+
+        .left .payment-method .dropdown-icon {
+            margin-left: auto;
+        }
+
+        #bank-building {
+            background-color: white;
+            color: #0F4D73;
+        }
+
+        .right {
+            width: 60%;
+            padding: 20px 50px;
+            box-sizing: border-box;
+        }
+
+        .right-container {
+            padding: 0 1em;
+            padding-bottom: 1em;
+            border: 2px solid rgb(217, 217, 217);
+            border-radius: 6px;
+        }
+
+        .right h4 {
+            font-size: 1em;
+            margin-bottom: 30px;
+            color: #0F4D73;
+        }
+
+        .right form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .right form .form-group {
+            flex: 1 1 45%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right form .form-group label {
+            margin-bottom: 5px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #0F4D73;
+        }
+
+        .right form .form-group input {
+            padding: 10px;
+            font-size: 0.7em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+            height: 4em;
+            box-sizing: border-box;
+        }
+
+        .right form .form-group input:focus {
+            outline: none;
+            border-color: #003366;
+        }
+
+        .right form .form-group-full {
+            flex: 1 1 100%;
+        }
+
+        .right form .form-group-full label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #0F4D73;
+        }
+
+        .right form .form-group-full input {
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 0.7em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+            height: 4em;
+            box-sizing: border-box;
+        }
+
+        .right form .form-group-full button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #003366;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .right form .form-group-full button:hover {
+            background-color: #004080;
+        }
+
+        #confirmation-form {
+            margin-top: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>DashPayz</h1>
+            <h2>Pay With</h2>
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <span>Debit / Credit Card</span>
+                </div>
+                <div class="payment-method" id="bank-building">
+                    <img src="https://img.icons8.com/ios-filled/50/003366/bank-building.png" alt="Open Banking">
+                    <span>Open Banking</span>
+                    <i id="dropdown" class="fa fa-chevron-down dropdown-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="right-container" id="initial-form">
+                <h4><i class="fa-regular fa-credit-card"></i> <span>Debit / Credit Card</span></h4>
+                <form id="payment-form" method="POST" action="/dashpayz/payment">
+                    <div class="form-group">
+                        <label for="amount">Amount*</label>
+                        <input type="text" id="amount" name="amount" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="currency">Currency*</label>
+                        <input type="text" id="currency" name="currency" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="first-name">First Name*</label>
+                        <input type="text" id="first-name" name="first-name" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name*</label>
+                        <input type="text" id="last-name" name="last-name" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country*</label>
+                        <input type="text" id="country" name="country" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone*</label>
+                        <input type="text" id="phone" name="phone" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email*</label>
+                        <input type="text" id="email" name="email" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-2">Phone*</label>
+                        <input type="text" id="phone-2" name="phone-2" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group-full">
+                        <button type="submit">Proceed</button>
+                    </div>
+                </form>
+            </div>
+            <div class="right-container" id="confirmation-form" style="display: none;">
+                <h4><i class="fa-regular fa-credit-card"></i> <span>Debit / Credit Card</span></h4>
+                <form method="POST" action="/dashpayz/payment">
+                    <div class="form-group-full">
+                        <label for="card-number">Card Number*</label>
+                        <input type="text" id="card-number" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="valid-thru">Valid Thru*</label>
+                        <input type="text" id="valid-thru" name="valid-thru" placeholder="mm/yyyy">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV*</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="000">
+                    </div>
+                    <div class="form-group-full">
+                        <label for="name-on-card">Name on Card*</label>
+                        <input type="text" id="name-on-card" name="name-on-card" placeholder="Name">
+                    </div>
+                    <div class="form-group-full">
+                        <button type="submit">Pay</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('payment-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            document.getElementById('initial-form').style.display = 'none';
+            document.getElementById('confirmation-form').style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>
