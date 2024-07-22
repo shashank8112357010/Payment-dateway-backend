@@ -16,6 +16,18 @@
             align-items: center;
             height: 100vh;
             background-color: #f4f4f4;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
+            /* Fade in complete */
+        }
+
+        .container.loaded {
+            opacity: 1;
+            /* Fade in complete */
         }
 
         .container {
@@ -26,6 +38,10 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
+            opacity: 0;
+            /* Start hidden */
+            transition: opacity 1s ease-in;
+            /* Fade in effect */
         }
 
         .left {
@@ -188,11 +204,24 @@
         #confirmation-form {
             margin-top: 5%;
         }
+
+        .success {
+            text-align: center;
+            opacity: 0;
+            /* Start hidden */
+            transition: opacity 1s ease-in;
+            /* Fade in effect */
+        }
+
+        .success.loaded {
+            opacity: 1;
+            /* Fade in complete */
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <div class="left">
             <h1>DashPayz</h1>
             <h2>Pay With</h2>
@@ -211,39 +240,39 @@
         <div class="right">
             <div class="right-container" id="initial-form">
                 <h4><i class="fa-regular fa-credit-card"></i> <span>Debit / Credit Card</span></h4>
-                <form id="payment-form" method="POST" action="/dashpayz/payment">
+                <form id="payment-form" method="POST">
                     <div class="form-group">
                         <label for="amount">Amount*</label>
-                        <input type="text" id="amount" name="amount" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="amount" name="amount" placeholder="Enter amount">
                     </div>
                     <div class="form-group">
                         <label for="currency">Currency*</label>
-                        <input type="text" id="currency" name="currency" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="currency" name="currency" placeholder="Enter currency">
                     </div>
                     <div class="form-group">
                         <label for="first-name">First Name*</label>
-                        <input type="text" id="first-name" name="first-name" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="first-name" name="firstName" placeholder="Enter first name">
                     </div>
                     <div class="form-group">
                         <label for="last-name">Last Name*</label>
-                        <input type="text" id="last-name" name="last-name" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="last-name" name="lastName" placeholder="Enter last name">
                     </div>
                     <div class="form-group">
                         <label for="country">Country*</label>
-                        <input type="text" id="country" name="country" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="country" name="country" placeholder="Enter country">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone*</label>
-                        <input type="text" id="phone" name="phone" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="phone" name="phoneNo" placeholder="Enter phone number">
                     </div>
                     <div class="form-group">
                         <label for="email">Email*</label>
-                        <input type="text" id="email" name="email" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="email" name="email" placeholder="Enter email">
                     </div>
-                    <div class="form-group">
-                        <label for="phone-2">Phone*</label>
-                        <input type="text" id="phone-2" name="phone-2" placeholder="XXXX-XXXX-XXXX-XXXX">
-                    </div>
+                    <!-- <div class="form-group">
+                        <label for="phone-2">Addr*</label>
+                        <input type="text" id="phone-2" name="phone-2" placeholder="Enter phone number">
+                    </div> -->
                     <div class="form-group-full">
                         <button type="submit">Proceed</button>
                     </div>
@@ -251,22 +280,23 @@
             </div>
             <div class="right-container" id="confirmation-form" style="display: none;">
                 <h4><i class="fa-regular fa-credit-card"></i> <span>Debit / Credit Card</span></h4>
-                <form method="POST" action="/dashpayz/payment">
+                <form id="final-payment-form" method="POST">
                     <div class="form-group-full">
                         <label for="card-number">Card Number*</label>
-                        <input type="text" id="card-number" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        <input required type="text" id="card-number" name="cardNumber"
+                            placeholder="XXXX-XXXX-XXXX-XXXX">
                     </div>
                     <div class="form-group">
                         <label for="valid-thru">Valid Thru*</label>
-                        <input type="text" id="valid-thru" name="valid-thru" placeholder="mm/yyyy">
+                        <input required type="text" id="valid-thru" name="validThru" placeholder="mm/yyyy">
                     </div>
                     <div class="form-group">
                         <label for="cvv">CVV*</label>
-                        <input type="text" id="cvv" name="cvv" placeholder="000">
+                        <input required type="text" id="cvv" name="cvv" placeholder="000">
                     </div>
                     <div class="form-group-full">
                         <label for="name-on-card">Name on Card*</label>
-                        <input type="text" id="name-on-card" name="name-on-card" placeholder="Name">
+                        <input required type="text" id="name-on-card" name="nameOnCard" placeholder="Name">
                     </div>
                     <div class="form-group-full">
                         <button type="submit">Pay</button>
@@ -275,12 +305,102 @@
             </div>
         </div>
     </div>
+    <div class="success" id="success-message" style="display: none; ">
+        <div style="text-align: center;">
+            <div>
+                <i class="fa-regular fa-circle-check" style="font-size: 5em; color: rgb(90, 243, 90);"></i>
+            </div>
+            <h1>Payment Successful</h1>
+            <p>Thank you for patronizing us today.<br>We value you!</p>
+            <button onclick="returnHome()"
+                style="padding: 10px 20px; font-size: 1em; color: #fff; background-color: #003366; border: none; border-radius: 6px; cursor: pointer;">Return
+                Homepage</button>
+        </div>
+    </div>
     <script>
-        document.getElementById('payment-form').addEventListener('submit', function (event) {
+         document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+            document.body.classList.add('loaded');
+            document.getElementById('container').classList.add('loaded');
+        }, 500); // Adjust the delay as needed
+    });
+
+        const initialForm = document.getElementById('initial-form');
+        const confirmationForm = document.getElementById('confirmation-form');
+        const successMessage = document.getElementById('success-message');
+        const paymentForm = document.getElementById('payment-form');
+        const finalPaymentForm = document.getElementById('final-payment-form');
+        const container = document.getElementById('container');
+
+        // Store initial form data
+        let initialFormData = {};
+
+        paymentForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            document.getElementById('initial-form').style.display = 'none';
-            document.getElementById('confirmation-form').style.display = 'block';
+
+            // Collect data from the initial form
+            const formData = new FormData(paymentForm);
+            initialFormData = Object.fromEntries(formData.entries());
+
+            console.log('Initial Form Data:', initialFormData); // Log initial form data
+
+            initialForm.style.display = 'none';
+            confirmationForm.style.display = 'block';
         });
+
+        finalPaymentForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Collect data from the final form
+            const formData = new FormData(finalPaymentForm);
+            const finalFormData = Object.fromEntries(formData.entries());
+
+            console.log('Final Form Data:', finalFormData); // Log final form data
+
+            // Merge both form data
+            const allFormData = { ...initialFormData, ...finalFormData };
+            console.log('All Form Data:', allFormData); // Log all form data before sending
+
+            // Convert to URL-encoded format
+            const urlEncodedData = new URLSearchParams(allFormData).toString();
+
+            console.log(urlEncodedData);
+
+            const requestUrl = `http://localhost:5000/dashpayz/payment?${urlEncodedData}`;
+
+            // Send data to the API
+            fetch(requestUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Response Data:', data); // Log response data
+                    if (data.success) {
+                        showSuccessMessage();
+                    } else {
+                        alert('Payment failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Log error
+                    alert('Payment failed: ' + error.message);
+                });
+        });
+
+        function showSuccessMessage() {
+        container.style.display = 'none';
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+            successMessage.classList.add('loaded');
+        }, 100); // Ensure the fade-in effect works
+    }
+
+        function returnHome() {
+            window.location.href = '/'; // Adjust this URL to point to your homepage
+        }
     </script>
 </body>
 
