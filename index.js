@@ -12,6 +12,7 @@ const userRoute = require("./routes/userRoutes");
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.set('view engine', 'ejs');

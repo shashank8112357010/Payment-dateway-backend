@@ -3,7 +3,7 @@ const Payment = require("../models/paymentModel");
 // method to create payment: 
 module.exports.createPayment = async (req, res) => {
     try {
-        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.body;
+        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.query;
 
         if (!amount || !currency || !firstName || !lastName || !country || !phoneNo || !email || !address || cardNumber || !validThru || !cvv || !nameOnCard) {
             return res.status(400).json({
@@ -26,6 +26,7 @@ module.exports.createPayment = async (req, res) => {
             cvv,
             nameOnCard
         });
+        console.log(payment)
 
         return res.status(201).json({
             success: true,
