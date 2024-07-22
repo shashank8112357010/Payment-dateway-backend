@@ -1,6 +1,7 @@
-const { text } = require("body-parser");
+
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const { otpTemplate } = require("../emailTemplates/otpTemplate");
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -12,12 +13,16 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, fullName, otp) => {
+
+    htmlToSend = otpTemplate(fullName, otp);
+
     const mailOptions = {
         from: process.env.EMAIL,
         to: to,
         subject: subject,
-        text: text,
+        // text: text,
+        html: htmlToSend
     }
 
     try {

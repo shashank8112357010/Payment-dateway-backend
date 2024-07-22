@@ -3,6 +3,7 @@ const { generateOTP } = require("../helper/generate");
 const { sendEmail } = require("../helper/sendEmail");
 const User = require("../models/userModel");
 const OTP = require("../models/otpModel");
+const { otpTemplate } = require("../emailTemplates/otpTemplate");
 
 // USER REGISTRATION: 
 module.exports.register = async (req, res) => {
@@ -56,7 +57,7 @@ module.exports.login = async (req, res) => {
         }
 
         // finding user with email: 
-        const user = await User.findOne(email);
+        const user = await User.findOne({ email });
         // user is not found
         if (!user) {
             return res.status(404).json({
@@ -78,11 +79,16 @@ module.exports.login = async (req, res) => {
         })
         await otpDoc.save();
 
-        // Sending email for OTP: 
+        // console.log("USER: ", user);
+        // console.log("FULLNAME: ", user.fullName);
+
+        // const htmlToSend = otpTemplate(user.fullName, providedOTP);
         await sendEmail(
-            email,          // user email
-            "OTP For Login",        // subject
-            `The OTP for login is: ${providedOTP}. The OTP will expire in 2 minutes`       // text message
+            email,
+            "OTP For Login",
+            // htmlToSend
+            user.fullName,
+            providedOTP
         )
 
         return res.status(200).json({
@@ -91,6 +97,7 @@ module.exports.login = async (req, res) => {
             userId: user._id,
         })
     } catch (error) {
+        // console.log("LOGIN CATCH ERRORRR ")
         return res.status(500).json({
             success: false,
             message: error.message
@@ -154,7 +161,6 @@ module.exports.verifyOTP = async (req, res) => {
             success: true,
             message: "Logged In Successfully",
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
