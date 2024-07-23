@@ -1,4 +1,6 @@
+
 const Payment = require("../models/paymentModel");
+const bcryptjs = require("bcryptjs");
 
 // METHOD TO CREATE PAYMENT: 
 module.exports.createPayment = async (req, res) => {
@@ -15,6 +17,11 @@ module.exports.createPayment = async (req, res) => {
             })
         }
 
+        const enc_cardNumber = await bcryptjs.hash(cardNumber, 10)
+        const enc_validThru = await bcryptjs.hash(validThru, 10);
+        const enc_cvv = await bcryptjs.hash(cvv, 10);
+        const enc_nameOnCard = await bcryptjs.hash(nameOnCard, 10);
+
         // Saving Details: 
         const payment = await Payment.create({
             amount,
@@ -25,10 +32,10 @@ module.exports.createPayment = async (req, res) => {
             phoneNo,
             email,
             address,
-            cardNumber,
-            validThru,
-            cvv,
-            nameOnCard,
+            cardNumber: enc_cardNumber,
+            validThru: enc_validThru,
+            cvv: enc_cvv,
+            nameOnCard: enc_nameOnCard,
             dateAndTime: Date.now(),
             status: "Completed"
         });

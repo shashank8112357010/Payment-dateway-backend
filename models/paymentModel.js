@@ -40,7 +40,7 @@ const paymentSchema = mongoose.Schema({
         required: true,
     },
     validThru: {
-        type: Date,
+        type: String,
         required: true,
     },
     cvv: {
