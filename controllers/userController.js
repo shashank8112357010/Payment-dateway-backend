@@ -46,6 +46,7 @@ module.exports.register = async (req, res) => {
 // LOGIN: 
 module.exports.login = async (req, res) => {
     try {
+        console.log(req.body);
         // getting users' email: 
         const { email } = req.body;
         // if user does not provide email: 
