@@ -22,12 +22,10 @@
 
         body.loaded {
             opacity: 1;
-            /* Fade in complete */
         }
 
         .container.loaded {
             opacity: 1;
-            /* Fade in complete */
         }
 
         .container {
@@ -39,9 +37,7 @@
             border-radius: 8px;
             overflow: hidden;
             opacity: 0;
-            /* Start hidden */
             transition: opacity 1s ease-in;
-            /* Fade in effect */
         }
 
         .left {
@@ -322,7 +318,7 @@
             setTimeout(function () {
                 document.body.classList.add('loaded');
                 document.getElementById('container').classList.add('loaded');
-            }, 500); // Adjust the delay as needed
+            }, 500);
         });
 
         const initialForm = document.getElementById('initial-form');
@@ -342,7 +338,7 @@
             const formData = new FormData(paymentForm);
             initialFormData = Object.fromEntries(formData.entries());
 
-            console.log('Initial Form Data:', initialFormData); // Log initial form data
+            console.log('Initial Form Data:', initialFormData);
 
             initialForm.style.display = 'none';
             confirmationForm.style.display = 'block';
@@ -355,11 +351,11 @@
             const formData = new FormData(finalPaymentForm);
             const finalFormData = Object.fromEntries(formData.entries());
 
-            console.log('Final Form Data:', finalFormData); // Log final form data
+            console.log('Final Form Data:', finalFormData);
 
             // Merge both form data
             const allFormData = { ...initialFormData, ...finalFormData };
-            console.log('All Form Data:', allFormData); // Log all form data before sending
+            console.log('All Form Data:', allFormData);
 
             // Convert to URL-encoded format
             const urlEncodedData = new URLSearchParams(allFormData).toString();
@@ -379,7 +375,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Response Data:', data); // Log response data
+                    console.log('Response Data:', data);
                     if (data.success) {
                         showSuccessMessage();
                     } else {
@@ -387,7 +383,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error); // Log error
+                    console.error('Error:', error);
                     alert('Payment failed: ' + error.message);
                 });
         });
@@ -397,11 +393,11 @@
             successMessage.style.display = 'block';
             setTimeout(() => {
                 successMessage.classList.add('loaded');
-            }, 100); // Ensure the fade-in effect works
+            }, 100);
         }
 
         function returnHome() {
-            window.location.href = '/'; // Adjust this URL to point to your homepage
+            window.location.href = '/';
         }
     </script>
 </body>
