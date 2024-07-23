@@ -362,13 +362,17 @@
 
             console.log(urlEncodedData);
 
+            // Get token from local storage
+            const token = localStorage.getItem('token');
+
             const requestUrl = `http://localhost:5000/dashpayz/payment`;
 
             // Send data to the API
             fetch(requestUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${token}`
                 },
                 // body: allFormData
                 body: urlEncodedData // Ensure this is a string

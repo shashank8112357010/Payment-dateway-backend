@@ -19,6 +19,15 @@ module.exports.register = async (req, res) => {
             })
         }
 
+        // If a user with email already exists in DB: 
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User with this email already exists.."
+            })
+        }
+
         // Saving user's data: 
         const user = await User.create({
             fullName,
@@ -155,8 +164,8 @@ module.exports.verifyOTP = async (req, res) => {
             })
         }
 
-        const accessToken = await generateToken(user);
-        console.log("ACCESS TOKEN: ", accessToken);
+        const token = await generateToken(user);
+        // console.log("ACCESS TOKEN: ", token);
 
         // If user provided correct OTP: 
         await OTP.deleteOne({ userId });
@@ -164,7 +173,7 @@ module.exports.verifyOTP = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Logged In Successfully",
-            accessToken,
+            token,
         })
     } catch (error) {
         return res.status(500).json({

@@ -4,7 +4,7 @@ const Payment = require("../models/paymentModel");
 module.exports.createPayment = async (req, res) => {
     try {
         // Getting Details: 
-        console.log("req body: ", req.body);
+        // console.log("req body: ", req.body);
         const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.body;
 
         // If Details are missing: 
@@ -52,7 +52,13 @@ module.exports.getPaymentDetails = async (req, res) => {
 
         // Finding all transactions with email (or card number): 
         // const { cardNumber } = req.body;
-        const { email } = req.body;
+        // const { email } = req.body;
+
+        // console.log("REQUEST BODY: ", req.body); 
+        // console.log("REQUEST USER: ", req.user); 
+
+        const { email } = req.user;
+        // console.log("EMAIL == ", email);
 
         // const allTransactions = await Payment.find({ cardNumber: cardNumber });
         const allTransactions = await Payment.find({ email: email });

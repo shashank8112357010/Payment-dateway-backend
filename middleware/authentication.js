@@ -6,7 +6,7 @@ module.exports = async function (req, res, next) {
     // const token = req.header('x-auth-token');
 
     const userToken = req.headers.authorization;
-    console.log("usertoken: ", userToken);
+    // console.log("usertoken: ", userToken);
 
     if (!userToken) {
         return res
