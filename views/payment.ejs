@@ -318,12 +318,12 @@
         </div>
     </div>
     <script>
-         document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(function () {
-            document.body.classList.add('loaded');
-            document.getElementById('container').classList.add('loaded');
-        }, 500); // Adjust the delay as needed
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                document.body.classList.add('loaded');
+                document.getElementById('container').classList.add('loaded');
+            }, 500); // Adjust the delay as needed
+        });
 
         const initialForm = document.getElementById('initial-form');
         const confirmationForm = document.getElementById('confirmation-form');
@@ -366,14 +366,16 @@
 
             console.log(urlEncodedData);
 
-            const requestUrl = `http://localhost:5000/dashpayz/payment?${urlEncodedData}`;
+            const requestUrl = `http://localhost:5000/dashpayz/payment`;
 
             // Send data to the API
             fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                },
+                // body: allFormData
+                body: urlEncodedData // Ensure this is a string
             })
                 .then(response => response.json())
                 .then(data => {
@@ -391,12 +393,12 @@
         });
 
         function showSuccessMessage() {
-        container.style.display = 'none';
-        successMessage.style.display = 'block';
-        setTimeout(() => {
-            successMessage.classList.add('loaded');
-        }, 100); // Ensure the fade-in effect works
-    }
+            container.style.display = 'none';
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.classList.add('loaded');
+            }, 100); // Ensure the fade-in effect works
+        }
 
         function returnHome() {
             window.location.href = '/'; // Adjust this URL to point to your homepage
