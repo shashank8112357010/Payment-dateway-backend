@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const path = require("path");
 
 require("dotenv").config();
@@ -14,6 +15,11 @@ const app = express();
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
