@@ -73,12 +73,12 @@ module.exports.getPaymentDetails = async (req, res) => {
         const allTransactions = await Payment.find({ email: email });
 
         // If no transactions found for a user: 
-        if (allTransactions.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No transactions found for user.."
-            })
-        }
+        // if (allTransactions.length === 0) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "No transactions found for user.."
+        //     })
+        // }
 
         return res.status(200).json({
             success: true,

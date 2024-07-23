@@ -4,11 +4,11 @@ const authenticate = require("../middleware/authentication");
 const router = express.Router();
 
 // Make Payment: 
-router.post("/payment", express.urlencoded({ extended: true }), authenticate, createPayment);
+router.post("/payment", express.urlencoded({ extended: true }), createPayment);
 
 // Get All Transactions of a User: 
 router.get("/getMyTransactions", authenticate, getPaymentDetails);
 
-router.get("/checkout", authenticate, renderCheckoutPage);
+router.get("/checkout", renderCheckoutPage);
 
 module.exports = router;
