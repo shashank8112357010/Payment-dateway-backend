@@ -314,12 +314,12 @@
         </div>
     </div>
     <script>
-         document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(function () {
-            document.body.classList.add('loaded');
-            document.getElementById('container').classList.add('loaded');
-        }, 500);
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                document.body.classList.add('loaded');
+                document.getElementById('container').classList.add('loaded');
+            }, 500);
+        });
 
         const initialForm = document.getElementById('initial-form');
         const confirmationForm = document.getElementById('confirmation-form');
@@ -351,29 +351,31 @@
             const formData = new FormData(finalPaymentForm);
             const finalFormData = Object.fromEntries(formData.entries());
 
-            console.log('Final Form Data:', finalFormData); 
+            console.log('Final Form Data:', finalFormData);
 
             // Merge both form data
             const allFormData = { ...initialFormData, ...finalFormData };
-            console.log('All Form Data:', allFormData); 
+            console.log('All Form Data:', allFormData);
 
             // Convert to URL-encoded format
             const urlEncodedData = new URLSearchParams(allFormData).toString();
 
             console.log(urlEncodedData);
 
-            const requestUrl = `http://localhost:5000/dashpayz/payment?${urlEncodedData}`;
+            const requestUrl = `http://localhost:5000/dashpayz/payment`;
 
             // Send data to the API
             fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                },
+                // body: allFormData
+                body: urlEncodedData // Ensure this is a string
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Response Data:', data); 
+                    console.log('Response Data:', data);
                     if (data.success) {
                         showSuccessMessage();
                     } else {
@@ -387,15 +389,15 @@
         });
 
         function showSuccessMessage() {
-        container.style.display = 'none';
-        successMessage.style.display = 'block';
-        setTimeout(() => {
-            successMessage.classList.add('loaded');
-        }, 100);
-    }
+            container.style.display = 'none';
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.classList.add('loaded');
+            }, 100);
+        }
 
         function returnHome() {
-            window.location.href = '/'; 
+            window.location.href = '/';
         }
     </script>
 </body>

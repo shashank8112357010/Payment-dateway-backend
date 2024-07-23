@@ -4,10 +4,11 @@ const Payment = require("../models/paymentModel");
 module.exports.createPayment = async (req, res) => {
     try {
         // Getting Details: 
-        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.query;
+        console.log("req body: ", req.body);
+        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.body;
 
         // If Details are missing: 
-        if (!amount || !currency || !firstName || !lastName || !country || !phoneNo || !email || !address || !cardNumber || !validThru || !cvv || !nameOnCard) {
+        if (!amount || !firstName || !lastName || !country || !phoneNo || !email || !address || !cardNumber || !validThru || !cvv || !nameOnCard) {
             return res.status(400).json({
                 success: false,
                 message: "Provide all required fields!!"

@@ -1,5 +1,5 @@
 
-const { generateOTP } = require("../helper/generate");
+const { generateOTP, generateToken } = require("../helper/generate");
 const { sendEmail } = require("../helper/sendEmail");
 const User = require("../models/userModel");
 const OTP = require("../models/otpModel");
@@ -155,12 +155,16 @@ module.exports.verifyOTP = async (req, res) => {
             })
         }
 
+        const accessToken = await generateToken(user);
+        console.log("ACCESS TOKEN: ", accessToken);
+
         // If user provided correct OTP: 
         await OTP.deleteOne({ userId });
 
         return res.status(200).json({
             success: true,
             message: "Logged In Successfully",
+            accessToken,
         })
     } catch (error) {
         return res.status(500).json({
