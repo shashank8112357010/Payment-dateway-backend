@@ -7,8 +7,8 @@ const router = express.Router();
 router.post("/payment", express.urlencoded({ extended: true }), authenticate, createPayment);
 
 // Get All Transactions of a User: 
-router.get("/getMyTransactions", getPaymentDetails);
+router.get("/getMyTransactions", authenticate, getPaymentDetails);
 
-router.get("/checkout", renderCheckoutPage);
+router.get("/checkout", authenticate, renderCheckoutPage);
 
 module.exports = router;

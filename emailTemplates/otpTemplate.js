@@ -41,7 +41,7 @@ module.exports.otpTemplate = (fullName, otp) => {
                     </div>
                 `).join('')}
                 </div>
-                <p style="font-size: 16px; color: #666666;">This code will only be valid for the next 5 minutes.</p>
+                <p style="font-size: 16px; color: #666666;">This code will only be valid for the next 2 minutes.</p>
                 <p style="font-size: 16px; color: #666666;">Thanks,<br>DashPay</p>
             </div>
             <div class="footer" style="text-align: center; font-size: 12px; color: #999999; padding-top: 20px; border-top: 1px solid #eeeeee;">
