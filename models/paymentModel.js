@@ -50,6 +50,19 @@ const paymentSchema = mongoose.Schema({
     nameOnCard: {
         type: String,
         required: true
+    },
+    dateAndTime: {
+        type: Date,
+        default: Date.now,
+    },
+    mode: {
+        type: String,
+        enum: ["Credit Card", "Crypto", "Open Bank"],
+        default: "Credit Card"
+    },
+    status: {
+        type: String,
+        enum: ["Completed", "Pending", "Cancelled"],
     }
 })
 

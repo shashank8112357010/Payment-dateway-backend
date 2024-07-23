@@ -28,7 +28,9 @@ module.exports.createPayment = async (req, res) => {
             cardNumber,
             validThru,
             cvv,
-            nameOnCard
+            nameOnCard,
+            dateAndTime: Date.now(),
+            status: "Completed"
         });
         // console.log("Payment: ", payment)
 
