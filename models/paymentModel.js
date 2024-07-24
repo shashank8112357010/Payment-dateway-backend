@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema
 
 const paymentSchema = mongoose.Schema({
     amount: {
@@ -52,8 +53,8 @@ const paymentSchema = mongoose.Schema({
         required: true
     },
     dateAndTime: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        // default: Date.now,
     },
     mode: {
         type: String,
@@ -63,6 +64,10 @@ const paymentSchema = mongoose.Schema({
     status: {
         type: String,
         enum: ["Completed", "Pending", "Cancelled"],
+    },
+    merchantId: {
+        type: Schema.Types.ObjectId,
+        ref: 'userModel'
     }
 })
 

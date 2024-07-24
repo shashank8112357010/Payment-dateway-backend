@@ -182,3 +182,53 @@ module.exports.verifyOTP = async (req, res) => {
         })
     }
 }
+
+
+// GET USER DETAILS: 
+module.exports.getUserDetails = async (req, res) => {
+    try {
+        // console.log("REQ USER = ", req.user);
+        // Getting user id: 
+        const { id } = req.user;
+        // console.log("User id: ", id);
+
+        // Getting user's token:
+        const userToken = req.headers.authorization;
+
+        if (!userToken) {
+            return res
+                .status(401)
+                .json({
+                    message: "Please authenticate using a token"
+                })
+        }
+
+        let token = userToken.split(" ");
+        const JWT_TOKEN = token[1];
+
+        // console.log("user token ---> ", JWT_TOKEN);
+
+        // Finding user: 
+        const user = await User.findById(id);
+        // If user is not found: 
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+        // console.log("USER = ", user);
+
+        return res.status(200).json({
+            success: true,
+            message: "User details fetched",
+            user,
+            token: JWT_TOKEN
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
