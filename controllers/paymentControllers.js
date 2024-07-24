@@ -3,6 +3,7 @@ const Payment = require("../models/paymentModel");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// FUNCTION TO FORMAT DATE: 
 function formatDateAndTime(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -12,7 +13,6 @@ function formatDateAndTime(date) {
     // const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
-
 
 
 // METHOD TO CREATE PAYMENT: 
@@ -30,6 +30,7 @@ module.exports.createPayment = async (req, res) => {
             })
         }
 
+        // HASHING CARD DETAILS:
         const enc_cardNumber = await bcryptjs.hash(cardNumber, 10)
         const enc_validThru = await bcryptjs.hash(validThru, 10);
         const enc_cvv = await bcryptjs.hash(cvv, 10);
@@ -84,6 +85,14 @@ module.exports.createPayment = async (req, res) => {
             payment
         })
     } catch (error) {
+        // console.log("error line 87")
+        // ERROR WHEN MERCHANT'S TOKEN IS EXPIRED:
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                success: false,
+                message: 'Token has expired..'
+            });
+        }
         return res.status(500).json({
             success: false,
             message: error.message
@@ -94,86 +103,56 @@ module.exports.createPayment = async (req, res) => {
 // GETTING ALL TRANSACTIONS OF A USER: 
 module.exports.getPaymentDetails = async (req, res) => {
     try {
-        // const {userId} = req.params.id;
-
-        // Finding all transactions with email (or card number): 
-        // const { cardNumber } = req.body;
-        // const { email } = req.body;
-
-        // console.log("REQUEST BODY: ", req.body); 
-        // console.log("REQUEST USER: ", req.user); 
-
-        // const { email } = req.user;
-
-
         // GETTING MERCHANT ID FROM TOKEN : 
         const { id } = req.user;
-        console.log(" MERCHANT ID == ", id);
+        // console.log(" MERCHANT ID == ", id);
 
+        // Getting the values for filters from query (if pageSize and pageNum are not provided, they will be set to default values)
+        let { pageSize = 3, pageNum = 1, dateFrom, dateTo } = req.query;
 
-        /*
-        const pageSize = 2;
-
-        let { pageNum = 1, dateFrom, dateTo } = req.query;
+        pageNum = parseInt(pageNum, 10);
+        if (isNaN(pageNum) || pageNum < 1) {
+            pageNum = 1;
+        }
 
         const DocToSkip = (pageNum - 1) * pageSize;
 
-        const filter = {}
+        let filter = {
+            merchantId: id,
+        }
+
+        // console.log("filter initially - ", filter);
 
         if (dateFrom && dateTo) {
-            filter.dateFrom = dateFrom;
-            filter.dateTo = dateTo;
+            filter.dateAndTime = { $gte: dateFrom, $lte: dateTo }
         }
 
-        // const allTransactions = await Payment.find({ cardNumber: cardNumber });
-
-        // const allTransactions = await Payment.find({ merchantId: id });
-        const allTransactions = await Payment.find(filter);
-        const allCount = allTransactions.length;
-        const result = await Payment.find(filter).skip(DocToSkip).limit(pageSize);
-*/
-
-
-        const allTransactions = await Payment.find({ merchantId: id });
-
-        // If no transactions found for a user: 
-        if (allTransactions.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No transactions found for user.."
-            })
-        }
-        // if (result.length === 0) {
-        //     return res.status(404).json({
-        //         success: false,
-        //         message: "No transactions found"
-        //     })
+        // if (dateFrom && dateTo) {
+        //     const startDate = new Date(dateFrom);
+        //     const endDate = new Date(dateTo);
+        //     if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+        //         filter.dateAndTime = { $gte: startDate, $lte: endDate };
+        //     }
         // }
 
-        return res.status(200).json({
-            success: true,
-            message: "Transactions found",
-            allTransactions,
-            // transactionsCount,
-            // result
-        })
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-}
+        // console.log("filter updated = ", filter);
+
+        // FETCHING ALL TRANSACTIONS AND COUNTING TOTAL: 
+        const allTransactions = await Payment.find(filter);
+        const allCount = allTransactions.length;
+
+        // FINDING REQUIRED NUMBER OF TRANSACTIONS ACCORDING TO FILTERS
+        const result = await Payment.find(filter).skip(DocToSkip).limit(pageSize);
+        // console.log(result.length)
 
 
-// GET ALL TRANSACTIONS OF A MERCHANT: 
-module.exports.getPaymentDetails = async (req, res) => {
-    try {
-        const { id } = req.user;
-        console.log("MERCHANT ID == ", id);
-
-        const result = await Payment.find({ merchantId: id });
-
+        // If no transactions found for a user: 
+        // if (allTransactions.length === 0) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "No transactions found for user.."
+        //     })
+        // }
         if (result.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -183,8 +162,9 @@ module.exports.getPaymentDetails = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Transaction details..",
-            result
+            message: "Transactions found",
+            allCount,       // Counting total number of documents found
+            result          // Documents that match according to filters (if provided)
         })
     } catch (error) {
         return res.status(500).json({
