@@ -123,8 +123,19 @@ module.exports.getPaymentDetails = async (req, res) => {
 
         // console.log("filter initially - ", filter);
 
+        // If both starting and ending dates are provided:
         if (dateFrom && dateTo) {
             filter.dateAndTime = { $gte: dateFrom, $lte: dateTo }
+        }
+
+        // If ending date is not provided, dateFrom is set to provided date and results till current date will be fetched:
+        if (dateFrom && !dateTo) {
+            filter.dateAndTime = { $gte: dateFrom /*,$lte: Date.now() */ }
+        }
+
+        // If starting date is not provided, results will be from the date when transactions have been done:
+        if (!dateFrom && dateTo) {
+            filter.dateAndTime = { $lte: dateTo }
         }
 
         // if (dateFrom && dateTo) {
@@ -153,12 +164,12 @@ module.exports.getPaymentDetails = async (req, res) => {
         //         message: "No transactions found for user.."
         //     })
         // }
-        if (result.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No transactions found"
-            })
-        }
+        // if (result.length === 0) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "No transactions found"
+        //     })
+        // }
 
         return res.status(200).json({
             success: true,
