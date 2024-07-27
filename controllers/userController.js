@@ -4,6 +4,10 @@ const { sendEmail } = require("../helper/sendEmail");
 const User = require("../models/userModel");
 const OTP = require("../models/otpModel");
 const { otpTemplate } = require("../emailTemplates/otpTemplate");
+const e = require("express");
+const { upload } = require("../middleware/multer");
+const multer = require("multer");
+const { uploadImg } = require("../middleware/cloudinary");
 
 // USER REGISTRATION: 
 module.exports.register = async (req, res) => {
@@ -173,6 +177,7 @@ module.exports.verifyOTP = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Logged In Successfully",
+            user,
             token,
         })
     } catch (error) {
@@ -231,4 +236,91 @@ module.exports.getUserDetails = async (req, res) => {
             message: error.message
         })
     }
+}
+
+// EDIT USER DETAILS AND UPLOAD PROFILE: 
+module.exports.editProfile = async (req, res) => {
+    upload(req, res, async (err) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(400).json({
+                success: false,
+                message: "File size too large.. Maximum size should be 1MB only!!",
+                error: true,
+            })
+        }
+        else if (err) {
+            return res.status(400).json({
+                success: false,
+                message: "Error uploading image",
+                error: err,
+            })
+        }
+        try {
+            const { id } = req.user;
+            // console.log("id = ", id);
+
+            const { fullName, mobileNumber, preferredLanguage, address } = req.body;
+
+            // Finding the user: 
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                })
+            }
+
+            user.fullName = fullName !== undefined ? fullName : user.fullName;
+            user.mobileNumber = mobileNumber !== undefined ? mobileNumber : user.mobileNumber;
+            user.preferredLanguage = preferredLanguage !== undefined ? preferredLanguage : user.preferredLanguage;
+            user.address = address !== undefined ? address : user.address
+
+            // Check if email is being attempted to update
+            if (email && email !== user.email) {
+                // Log the attempt or return an error
+                return res.status(400).json({
+                    success: false,
+                    message: "Email cannot be modified",
+                });
+            }
+
+            if (req.file) {
+                try {
+                    const result = await uploadImg(req.file.path);
+                    if (result.success) {
+                        user.profileImg = {
+                            key: result.public_id,
+                            url: result.secure_url,
+                        }
+                    } else {
+                        return res.status(500).json({
+                            success: false,
+                            message: 'Image upload failed',
+                            error: result.message
+                        })
+                    }
+                } catch (error) {
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Image upload failed',
+                        error: error.message
+                    });
+                }
+
+                // await user.save();
+            }
+
+            await user.save();
+
+            return res.status(200).json({
+                success: true,
+                message: "User Profile Updated Successfully"
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            })
+        }
+    }
+    )
 }

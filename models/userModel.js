@@ -30,6 +30,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    profileImg: {
+        key: {
+            type: String,
+        },
+        url: {
+            type: String,
+        }
+    },
     // passportNumber: {
     //     type: String,
     //     required: true,
