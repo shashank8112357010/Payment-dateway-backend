@@ -1,13 +1,15 @@
 const express = require("express");
 const { register, login, verifyOTP, getUserDetails, editProfile } = require("../controllers/userController");
 const authenticate = require("../middleware/authentication");
+const { validate } = require("../middleware/validate");
+const { registerValidator, loginValidator } = require("../validators/userValidation");
 const router = express.Router();
 
 // USER REGISTRATION: 
-router.post("/register", register);
+router.post("/register", validate(registerValidator), register);
 
 // LOGIN: 
-router.post("/login", login);
+router.post("/login", validate(loginValidator), login);
 
 // VERIFY OTP: 
 router.post("/verifyOTP/:userId", verifyOTP);

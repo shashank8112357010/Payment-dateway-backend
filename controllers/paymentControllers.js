@@ -20,10 +20,13 @@ module.exports.createPayment = async (req, res) => {
     try {
         // Getting Details: 
         // console.log("req body: ", req.body);
-        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, validThru, cvv, nameOnCard } = req.body;
+        const { amount, currency, firstName, lastName, country, phoneNo, email, address, cardNumber, cardExpiry, cvv, nameOnCard } = req.body;
+
+        // const callbackURL = 'www.youtube.com';
+        const callbackURL = '';
 
         // If Details are missing: 
-        if (!amount || !firstName || !lastName || !country || !phoneNo || !email || !address || !cardNumber || !validThru || !cvv || !nameOnCard) {
+        if (!amount || !firstName || !lastName || !country || !phoneNo || !email || !address || !cardNumber || !cardExpiry || !cvv || !nameOnCard) {
             return res.status(400).json({
                 success: false,
                 message: "Provide all required fields!!"
@@ -32,7 +35,7 @@ module.exports.createPayment = async (req, res) => {
 
         // HASHING CARD DETAILS:
         const enc_cardNumber = await bcryptjs.hash(cardNumber, 10)
-        const enc_validThru = await bcryptjs.hash(validThru, 10);
+        const enc_cardExpiry = await bcryptjs.hash(cardExpiry, 10);
         const enc_cvv = await bcryptjs.hash(cvv, 10);
         const enc_nameOnCard = await bcryptjs.hash(nameOnCard, 10);
 
@@ -70,7 +73,7 @@ module.exports.createPayment = async (req, res) => {
             email,
             address,
             cardNumber: enc_cardNumber,
-            validThru: enc_validThru,
+            cardExpiry: enc_cardExpiry,
             cvv: enc_cvv,
             nameOnCard: enc_nameOnCard,
             // dateAndTime: Date.now(),
@@ -79,11 +82,31 @@ module.exports.createPayment = async (req, res) => {
             merchantId
         });
         // console.log("Payment: ", payment)
-        return res.status(201).json({
-            success: true,
-            message: "Payment created successfully",
-            payment
-        })
+
+        // if (payment) {
+        //     if (callbackURL) return res.redirect(200, callbackURL);
+        //     return res.status(201).json({
+        //         success: true,
+        //         message: "Payment created successfully",
+        //         payment
+        //     })
+        // }
+        if (callbackURL.length > 0) {
+            return res.status(201).json({
+                success: true,
+                message: "Payment done successfully",
+                payment,
+                callbackURL: callbackURL,
+            })
+        }
+        else {
+            return res.status(201).json({
+                success: true,
+                message: "Payment done successfully",
+                payment,
+                // callbackURL: callbackURL,
+            })
+        }
     } catch (error) {
         // console.log("error line 87")
         // ERROR WHEN MERCHANT'S TOKEN IS EXPIRED:

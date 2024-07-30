@@ -259,7 +259,7 @@ module.exports.editProfile = async (req, res) => {
             const { id } = req.user;
             // console.log("id = ", id);
 
-            const { fullName, mobileNumber, preferredLanguage, address } = req.body;
+            const { fullName, mobileNumber, email, preferredLanguage, address } = req.body;
 
             // Finding the user: 
             const user = await User.findById(id);
@@ -313,7 +313,8 @@ module.exports.editProfile = async (req, res) => {
 
             return res.status(200).json({
                 success: true,
-                message: "User Profile Updated Successfully"
+                message: "User Profile Updated Successfully",
+                user
             })
         } catch (error) {
             return res.status(500).json({

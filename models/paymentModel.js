@@ -40,7 +40,7 @@ const paymentSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    validThru: {
+    cardExpiry: {
         type: String,
         required: true,
     },
@@ -68,6 +68,9 @@ const paymentSchema = mongoose.Schema({
     merchantId: {
         type: Schema.Types.ObjectId,
         ref: 'userModel'
+    },
+    callbackURL: {
+        type: String,
     }
 })
 
